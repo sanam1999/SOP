@@ -1,0 +1,38 @@
+
+
+.app-layout {
+  display: grid;
+
+  grid-template-areas:
+    "header header"
+    "sidebar main";
+  grid-template-columns: 1px 1fr;
+  grid-template-rows: 60px 1fr 50px;
+  overflow: hidden;
+  background-color: #111827;
+}
+
+/* Header */
+.app-layout > *:nth-child(1) {
+  grid-area: header;
+  background-color: #111827;
+  color: white;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+}
+
+
+/* Main Content */
+.app-layout > *:nth-child(2) {
+  grid-area: main;
+  overflow-y: auto;
+  width: 100%;
+}
+
+
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
