@@ -15,7 +15,7 @@
 /* Header */
 .app-layout > *:nth-child(1) {
   grid-area: header;
-  background-color: #111827;
+  background-color: #323232;
   color: white;
   display: flex;
   align-items: center;
@@ -28,6 +28,7 @@
   grid-area: main;
   overflow-y: auto;
   width: 100%;
+  background-color: #000000;
 }
 
 

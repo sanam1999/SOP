@@ -1,11 +1,29 @@
-import React, { useState } from "react";
-
+import React, { useState, useEffect } from "react";
+import currencie from "../../Constants/countries_currency.json";
 export default function CurrencyConverter() {
   const [amount, setAmount] = useState("");
+  const [rate, setRate] = useState(null);
+  const [output, setOutput] = useState("");  
   const [fromCurrency, setFromCurrency] = useState("USD");
   const [toCurrency, setToCurrency] = useState("EUR");
 
-  const currencies = ["USD", "EUR", "GBP", "JPY", "INR", "AUD", "CAD"];
+useEffect(() => {
+  
+  fetch(`https://open.er-api.com/v6/latest/${fromCurrency}`)
+    .then(res => res.json())
+    .then(data => {
+      if (data.result === "success") { // check actual API response
+       setRate(data.rates[toCurrency])
+      } else {
+        setForecastData([]);
+      }
+    })
+    .catch(err => console.error(err));
+}, [fromCurrency, toCurrency]);
+
+useEffect(() => { 
+  setOutput(rate*amount)
+},[amount,rate])
 
   return (
     <div
@@ -47,9 +65,10 @@ export default function CurrencyConverter() {
                 onChange={(e) => setFromCurrency(e.target.value)}
                 className="w-full rounded-lg bg-[#303030] text-white h-14 px-4 focus:outline-none"
               >
-                {currencies.map((currency) => (
-                  <option key={currency} value={currency}>
-                    {currency}
+               {Object.entries(currencie).map(([key ,info]) => (
+                
+                  <option key={key} value={key}>
+                    {info.name}, {info.symbolNative}
                   </option>
                 ))}
               </select>
@@ -64,8 +83,8 @@ export default function CurrencyConverter() {
                 readOnly
                 value={
                   amount
-                    ? `${amount} ${fromCurrency} = ${
-                        (amount * 0.85).toFixed(2) // just mock conversion
+                    ? `${1} ${fromCurrency} = ${
+                        (rate).toFixed(2) // just mock conversion
                       } ${toCurrency}`
                     : ""
                 }
@@ -80,9 +99,9 @@ export default function CurrencyConverter() {
                 onChange={(e) => setToCurrency(e.target.value)}
                 className="w-full rounded-lg bg-[#303030] text-white h-14 px-4 focus:outline-none"
               >
-                {currencies.map((currency) => (
-                  <option key={currency} value={currency}>
-                    {currency}
+                {Object.entries(currencie).map(([key ,info]) => (
+                  <option key={key} value={key}>
+                    {info.name}, {info.symbolNative}
                   </option>
                 ))}
               </select>
@@ -95,7 +114,7 @@ export default function CurrencyConverter() {
           </h1>
           <p className="text-white px-4 pt-1">
             {amount
-              ? `${amount} ${fromCurrency} = ${(amount * 0.85).toFixed(
+              ? `${amount} ${fromCurrency} = ${(amount * rate).toFixed(
                   2
                 )} ${toCurrency}`
               : "Enter an amount to convert"}
@@ -108,15 +127,12 @@ export default function CurrencyConverter() {
           <div className="flex flex-wrap gap-4 px-4 py-6">
             <div className="flex min-w-72 flex-1 flex-col gap-2">
               <p className="text-white">{fromCurrency} to {toCurrency}</p>
-              <p className="text-white text-[32px] font-bold">0.85</p>
+              <p className="text-white text-[32px] font-bold">{rate}</p>
               <div className="flex gap-1">
                 <p className="text-[#ababab]">Last 30 Days</p>
                 <p className="text-[#fa3838] font-medium">-0.5%</p>
               </div>
-              {/* Chart Placeholder */}
-              <div className="flex justify-center items-center h-[180px] bg-[#1e1e1e] rounded-lg">
-                <p className="text-[#ababab]">Chart Coming Soon...</p>
-              </div>
+             
             </div>
           </div>
         </div>

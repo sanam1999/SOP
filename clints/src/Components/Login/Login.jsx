@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 export default function GoogleLoginPopup() {
-  const [user, setUser] = useState(true);
+  const [user, setUser] = useState(false);
   const [error, setError] = useState(""); 
   
 
